@@ -1,14 +1,56 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 export function CampaignForm() {
-  const [campaignName, setCampaignName] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [recruiterNotes, setRecruiterNotes] = useState("");
+  const router = useRouter();
+
+  const [campaignName, setCampaignName] =
+    useState("");
+
+  const [jobDescription, setJobDescription] =
+    useState("");
+
+  const [recruiterNotes, setRecruiterNotes] =
+    useState("");
+
+function handleGenerate() {
+  console.log(
+    "SAVING JD:",
+    jobDescription
+  );
+
+  console.log(
+    "SAVING NOTES:",
+    recruiterNotes
+  );
+
+  console.log(
+    "SAVING CAMPAIGN:",
+    campaignName
+  );
+
+  sessionStorage.setItem(
+    "jobDescription",
+    jobDescription
+  );
+
+  sessionStorage.setItem(
+    "recruiterNotes",
+    recruiterNotes
+  );
+
+  sessionStorage.setItem(
+    "campaignName",
+    campaignName
+  );
+
+  router.push("/campaign/framework");
+}
 
   return (
     <form className="space-y-6">
@@ -36,7 +78,6 @@ export function CampaignForm() {
           onChange={(e) =>
             setJobDescription(e.target.value)
           }
-          placeholder="Paste job description..."
           className="min-h-[220px]"
         />
       </div>
@@ -51,23 +92,14 @@ export function CampaignForm() {
           onChange={(e) =>
             setRecruiterNotes(e.target.value)
           }
-          placeholder="Optional notes..."
           className="min-h-[120px]"
         />
       </div>
 
       <button
         type="button"
-        className="
-          rounded-lg
-          bg-white
-          px-5
-          py-3
-          text-black
-          font-medium
-          transition
-          hover:bg-zinc-200
-        "
+        onClick={handleGenerate}
+        className="rounded-lg bg-white px-5 py-3 font-medium text-black"
       >
         Generate Framework
       </button>
