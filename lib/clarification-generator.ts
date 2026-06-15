@@ -54,6 +54,11 @@ Schema:
       model: "gemini-2.5-flash",
       contents: prompt,
     });
+    console.log(
+  "RAW CLARIFICATION RESPONSE:"
+);
+
+console.log(response.text);
 
   return parseClarifications(
     response.text ?? ""

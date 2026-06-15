@@ -34,6 +34,12 @@ Rules:
 - Preserve recruiter intent.
 - Do not remove important requirements.
 
+- Update evaluationCriteria using recruiter answers.
+- Increase weights for heavily prioritized criteria.
+- Decrease weights for de-prioritized criteria.
+- Total weights should remain close to 100.
+- Preserve required=true for truly mandatory criteria.
+
 Return ONLY valid JSON.
 
 Schema:
