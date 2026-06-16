@@ -1,34 +1,40 @@
+import Link from "next/link";
+
 import { HiringFramework } from "@/types/framework";
 import { FrameworkCard } from "@/components/framework/framework-card";
 
 type Props = {
+  campaignId: string;
   framework: HiringFramework;
 };
 
 export function ClarificationResult({
+  campaignId,
   framework,
 }: Props) {
   return (
     <div className="space-y-8">
-      <div className="rounded-2xl border border-zinc-800 p-6">
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
         <h2 className="mb-3 text-xl font-semibold">
           Refined Role Summary
         </h2>
 
-        <p>
+        <p className="text-zinc-300">
           {framework.roleSummary}
         </p>
       </div>
 
-      <FrameworkCard
-        title="Must Have"
-        items={framework.mustHave}
-      />
+      <div className="grid gap-6 md:grid-cols-2">
+        <FrameworkCard
+          title="Must Have"
+          items={framework.mustHave}
+        />
 
-      <FrameworkCard
-        title="Preferred"
-        items={framework.preferred}
-      />
+        <FrameworkCard
+          title="Preferred"
+          items={framework.preferred}
+        />
+      </div>
 
       <FrameworkCard
         title="Deal Breakers"
@@ -42,22 +48,25 @@ export function ClarificationResult({
         }
       />
 
-      <FrameworkCard
-        title="Hidden Evaluation Factors"
-        items={
-          framework.hiddenEvaluationFactors
-        }
-      />
+      <div className="grid gap-6 md:grid-cols-2">
+        <FrameworkCard
+          title="Hidden Evaluation Factors"
+          items={
+            framework.hiddenEvaluationFactors
+          }
+        />
 
-      <FrameworkCard
-        title="Evaluation Risks"
-        items={
-          framework.evaluationRisks
-        }
-      />
+        <FrameworkCard
+          title="Evaluation Risks"
+          items={
+            framework.evaluationRisks
+          }
+        />
+      </div>
 
       {framework.evaluationCriteria &&
-        framework.evaluationCriteria.length > 0 && (
+        framework.evaluationCriteria.length >
+          0 && (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
             <h2 className="mb-4 text-xl font-semibold">
               Evaluation Criteria
@@ -65,7 +74,9 @@ export function ClarificationResult({
 
             <div className="space-y-4">
               {framework.evaluationCriteria.map(
-                (criterion) => (
+                (
+                  criterion
+                ) => (
                   <div
                     key={
                       criterion.criterion
@@ -118,6 +129,15 @@ export function ClarificationResult({
             </div>
           </div>
         )}
+
+      <div className="flex gap-4 pt-4">
+        <Link
+          href={`/campaign/${campaignId}`}
+          className="rounded-lg bg-white px-5 py-3 font-medium text-black"
+        >
+          Go to Campaign
+        </Link>
+      </div>
     </div>
   );
 }

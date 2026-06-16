@@ -18,40 +18,44 @@ export function CampaignForm() {
   const [recruiterNotes, setRecruiterNotes] =
     useState("");
 
-function handleGenerate() {
-  console.log(
-    "SAVING JD:",
-    jobDescription
-  );
+async function handleGenerate() {
+  try {
+    const response = await fetch(
+      "/api/campaigns",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify({
+          title: campaignName,
+          jobDescription,
+          recruiterNotes,
+        }),
+      }
+    );
 
-  console.log(
-    "SAVING NOTES:",
-    recruiterNotes
-  );
+    const data =
+      await response.json();
 
-  console.log(
-    "SAVING CAMPAIGN:",
-    campaignName
-  );
+    if (!data.success) {
+      throw new Error(
+        data.error
+      );
+    }
 
-  sessionStorage.setItem(
-    "jobDescription",
-    jobDescription
-  );
+    router.push(
+      `/campaign/${data.campaign._id}/framework`
+    );
+  } catch (error) {
+    console.error(error);
 
-  sessionStorage.setItem(
-    "recruiterNotes",
-    recruiterNotes
-  );
-
-  sessionStorage.setItem(
-    "campaignName",
-    campaignName
-  );
-
-  router.push("/campaign/framework");
+    alert(
+      "Unable to create campaign."
+    );
+  }
 }
-
   return (
     <form className="space-y-6">
       <div>

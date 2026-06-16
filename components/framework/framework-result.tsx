@@ -4,10 +4,12 @@ import { HiringFramework } from "@/types/framework";
 import { FrameworkCard } from "./framework-card";
 
 type Props = {
+  campaignId: string;
   framework: HiringFramework;
 };
 
 export function FrameworkResult({
+  campaignId,
   framework,
 }: Props) {
   return (
@@ -59,8 +61,8 @@ export function FrameworkResult({
       </div>
 
       {framework.evaluationCriteria &&
-        framework.evaluationCriteria
-          .length > 0 && (
+        framework.evaluationCriteria.length >
+          0 && (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
             <h2 className="mb-4 text-xl font-semibold">
               Evaluation Criteria
@@ -124,21 +126,11 @@ export function FrameworkResult({
 
       <div className="flex gap-4 pt-4">
         <Link
-          href="/campaign/clarification"
+          href={`/campaign/${campaignId}/clarification`}
           className="inline-flex rounded-lg bg-white px-5 py-3 font-medium text-black"
         >
           Generate Clarifications
         </Link>
-
-        <button
-          onClick={() => {
-            sessionStorage.clear();
-            location.reload();
-          }}
-          className="rounded-lg border border-red-500 px-4 py-2 text-red-500"
-        >
-          Reset Cache
-        </button>
       </div>
     </div>
   );
