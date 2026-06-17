@@ -1,5 +1,6 @@
 export interface UploadResult {
   storedFileName: string;
+
   path: string;
 }
 

@@ -1,7 +1,17 @@
+import fs from "fs/promises";
+import path from "path";
+import crypto from "crypto";
+
 import {
   StorageService,
   UploadResult,
 } from "./storage";
+
+const STORAGE_DIR = path.join(
+  process.cwd(),
+  "storage",
+  "resumes"
+);
 
 export class LocalStorageService
   implements StorageService
@@ -11,25 +21,55 @@ export class LocalStorageService
     originalFileName: string,
     mimeType: string
   ): Promise<UploadResult> {
-    // Real implementation comes in the next step
-    // This satisfies the interface for now.
+    await fs.mkdir(STORAGE_DIR, {
+      recursive: true,
+    });
+
+    const extension =
+      path.extname(
+        originalFileName
+      );
+
+    const storedFileName =
+      `${crypto.randomUUID()}${extension}`;
+
+    const filePath = path.join(
+      STORAGE_DIR,
+      storedFileName
+    );
+
+    await fs.writeFile(
+      filePath,
+      buffer
+    );
 
     return {
-      storedFileName: "",
-      path: "",
+      storedFileName,
+      path: filePath,
     };
   }
 
   async delete(
     storedFileName: string
   ): Promise<void> {
-    // Real implementation comes later.
-    return;
+    const filePath = path.join(
+      STORAGE_DIR,
+      storedFileName
+    );
+
+    try {
+      await fs.unlink(filePath);
+    } catch {
+      // Ignore if already deleted.
+    }
   }
 
   getDownloadPath(
     storedFileName: string
   ): string {
-    return `/uploads/${storedFileName}`;
+    return path.join(
+      STORAGE_DIR,
+      storedFileName
+    );
   }
 }
