@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Campaign } from "@/models/Campaign";
 
@@ -15,9 +16,18 @@ export default async function CampaignPage({
 }: Props) {
   const { id } = await params;
 
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    notFound();
+  }
+
   await connectDB();
 
-  const campaign = await Campaign.findById(id).lean();
+  const campaign = await Campaign.findOne({
+    _id: id,
+    ownerId: session.user.id,
+  }).lean();
 
   if (!campaign) {
     notFound();

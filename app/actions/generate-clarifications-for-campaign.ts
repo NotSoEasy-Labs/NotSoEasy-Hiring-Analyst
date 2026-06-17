@@ -2,6 +2,7 @@
 
 import { connectDB } from "@/lib/mongodb";
 import { Campaign } from "@/models/Campaign";
+import { getOwnedCampaign } from "@/lib/get-owned-campaign";
 
 import { generateClarifications } from "@/lib/clarification-generator";
 
@@ -21,10 +22,10 @@ export async function generateClarificationsForCampaignAction(
   campaignId: string
 ): Promise<Response> {
   try {
-    await connectDB();
 
-    const campaign =
-      await Campaign.findById(campaignId);
+
+const campaign =
+  await getOwnedCampaign(campaignId);
 
     console.log(
       "Loading campaign:",

@@ -4,9 +4,7 @@ import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Campaign } from "@/models/Campaign";
 
-export async function deleteCampaignAction(
-  campaignId: string
-) {
+export async function migrateCampaignOwnersAction() {
   try {
     const session = await auth();
 
@@ -19,30 +17,27 @@ export async function deleteCampaignAction(
 
     await connectDB();
 
-    const campaign =
-      await Campaign.findOneAndDelete({
-        _id: campaignId,
-        ownerId: session.user.id,
-      });
-
-    if (!campaign) {
-      return {
-        success: false,
-        error:
-          "Campaign not found or access denied.",
-      };
-    }
+    const result = await Campaign.updateMany(
+      {
+        ownerId: null,
+      },
+      {
+        $set: {
+          ownerId: session.user.id,
+        },
+      }
+    );
 
     return {
       success: true,
+      modified: result.modifiedCount,
     };
   } catch (error) {
     console.error(error);
 
     return {
       success: false,
-      error:
-        "Unable to delete campaign.",
+      error: "Migration failed.",
     };
   }
 }

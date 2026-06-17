@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-export function HeroSection() {
+import { auth } from "@/auth";
+
+export async function HeroSection() {
+  const session = await auth();
+
   return (
-    <section className="mx-auto max-w-7xl px-6 pt-24 pb-20">
+    <section className="mx-auto max-w-7xl px-6 pb-20 pt-24">
       <div className="max-w-4xl">
         <div className="mb-6 inline-flex rounded-full border border-zinc-800 px-3 py-1 text-sm text-zinc-400">
           NotSoEasy Labs
@@ -26,13 +30,23 @@ export function HeroSection() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
-          <Link
-            href="/campaign/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
-          >
-            Create Campaign
-            <ArrowRight size={16} />
-          </Link>
+          {session ? (
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
+            >
+              Go to Dashboard
+              <ArrowRight size={16} />
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
+            >
+              Continue with Google
+              <ArrowRight size={16} />
+            </Link>
+          )}
 
           <button className="rounded-lg border border-zinc-800 px-5 py-3 text-zinc-300 transition hover:border-zinc-700 hover:bg-zinc-900">
             Learn More

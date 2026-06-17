@@ -5,6 +5,16 @@ import mongoose, {
 const CampaignSchema =
   new Schema(
     {
+      ownerId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+
+        // NOT required yet
+        default: null,
+
+        index: true,
+      },
+
       title: {
         type: String,
         required: true,

@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 
 import { generateFramework } from "@/lib/framework-generator";
 import { HiringFramework } from "@/types/framework";
+import { getOwnedCampaign } from "@/lib/get-owned-campaign";
 
 type Response =
   | {
@@ -20,10 +21,9 @@ export async function generateFrameworkForCampaignAction(
   campaignId: string
 ): Promise<Response> {
   try {
-    await connectDB();
-const campaign =
-  await Campaign.findById(campaignId);
 
+const campaign =
+  await getOwnedCampaign(campaignId);
 console.log(
   "Loading campaign:",
   campaignId

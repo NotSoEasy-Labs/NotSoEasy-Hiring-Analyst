@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Campaign } from "@/models/Campaign";
 
 import { refineFramework } from "@/lib/framework-refiner";
+import { getOwnedCampaign } from "@/lib/get-owned-campaign";
 
 import { HiringFramework } from "@/types/framework";
 
@@ -24,9 +25,8 @@ export async function refineFrameworkForCampaignAction(
   try {
     await connectDB();
 
-    const campaign =
-      await Campaign.findById(campaignId);
-
+const campaign =
+  await getOwnedCampaign(campaignId);
     console.log(
       "Loading campaign:",
       campaignId

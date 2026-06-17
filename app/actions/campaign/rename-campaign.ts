@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Campaign } from "@/models/Campaign";
 
@@ -8,17 +9,38 @@ export async function renameCampaignAction(
   title: string
 ) {
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
+    }
+
     await connectDB();
 
-    await Campaign.findByIdAndUpdate(
-      campaignId,
-      {
-        title: title.trim(),
-      },
-      {
-        returnDocument: "after",
-      }
-    );
+    const campaign =
+      await Campaign.findOneAndUpdate(
+        {
+          _id: campaignId,
+          ownerId: session.user.id,
+        },
+        {
+          title: title.trim(),
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+
+    if (!campaign) {
+      return {
+        success: false,
+        error:
+          "Campaign not found or access denied.",
+      };
+    }
 
     return {
       success: true,
@@ -28,7 +50,8 @@ export async function renameCampaignAction(
 
     return {
       success: false,
-      error: "Unable to rename campaign.",
+      error:
+        "Unable to rename campaign.",
     };
   }
 }
