@@ -1,9 +1,7 @@
 "use server";
 
 import { connectDB } from "@/lib/mongodb";
-import { Campaign } from "@/models/Campaign";
 import { getOwnedCampaign } from "@/lib/get-owned-campaign";
-
 import { generateClarifications } from "@/lib/clarification-generator";
 
 import { ClarificationQuestion } from "@/types/clarification";
@@ -22,49 +20,23 @@ export async function generateClarificationsForCampaignAction(
   campaignId: string
 ): Promise<Response> {
   try {
+    await connectDB();
 
-
-const campaign =
-  await getOwnedCampaign(campaignId);
-
-    console.log(
-      "Loading campaign:",
-      campaignId
-    );
+    const campaign =
+      await getOwnedCampaign(campaignId);
 
     if (!campaign) {
       return {
         success: false,
-        error:
-          "Campaign not found.",
+        error: "Campaign not found.",
       };
     }
 
-    if (
-      campaign.clarificationQuestions &&
-      campaign.clarificationQuestions
-        .length > 0
-    ) {
-      console.log(
-        "✅ Returning clarification questions from Mongo"
-      );
-
-      return {
-        success: true,
-        questions:
-          campaign.clarificationQuestions,
-      };
-    }
-
-    console.log(
-      "🤖 Generating clarification questions..."
-    );
-
+    // Always regenerate after structured-output migration.
+    // Old Mongo documents don't contain the new schema.
     const questions =
       await generateClarifications(
-        JSON.stringify(
-          campaign.framework
-        )
+        JSON.stringify(campaign.framework)
       );
 
     campaign.clarificationQuestions =

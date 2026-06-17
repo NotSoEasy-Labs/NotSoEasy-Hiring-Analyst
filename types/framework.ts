@@ -35,7 +35,7 @@ export interface HiringFramework {
 
   evaluationRisks: string[];
 
-  evaluationCriteria?: EvaluationCriterion[];
+  evaluationCriteria: EvaluationCriterion[];  
 
   clarificationQuestions?: ClarificationQuestion[];
 

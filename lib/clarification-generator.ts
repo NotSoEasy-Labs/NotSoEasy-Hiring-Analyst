@@ -1,39 +1,65 @@
-import { gemini } from "./gemini";
-import { parseClarifications } from "./clarification-parser";
+import { generateStructuredOutput } from "./ai/structured-output";
+import { clarificationSchema } from "./ai/schemas/clarification.schema";
+import { ClarificationQuestion } from "@/types/clarification";
+
+interface ClarificationResponse {
+  questions: ClarificationQuestion[];
+}
 
 export async function generateClarifications(
   framework: string
-) {
+): Promise<ClarificationQuestion[]> {
   const prompt = `
-You are a hiring consultant.
+You are a senior hiring consultant.
 
-Given a hiring framework:
+Given this hiring framework:
 
 ${framework}
 
+Your goal is to improve recruiter decision quality.
+
 Generate between 1 and 5 clarification questions.
 
-Only ask questions that improve candidate evaluation quality.
+Only ask questions that would materially improve candidate evaluation.
 
-Question Types:
+Question types:
 
 priority
 flexibility
 weighting
 dealbreaker
 
-Examples:
+Each question MUST include EXACTLY 3 answer options.
 
-Would exceptional ICU experience compensate for fewer years of experience?
+Use these patterns:
 
-Which should be weighted more heavily?
+priority
+["Low","Medium","High"]
 
-Research Experience
-Leadership Experience
+flexibility
+["Strict","Somewhat Flexible","Flexible"]
 
-Should missing ACLS certification result in automatic rejection?
+dealbreaker
+["Yes","No","Depends"]
 
-Return JSON only.
+weighting
+[
+"First criterion",
+"Equal priority",
+"Second criterion"
+]
+
+Guidelines:
+
+- Questions must remove ambiguity.
+- Questions must improve future resume evaluation.
+- Avoid asking obvious questions.
+- Avoid repeating information already present.
+- Never leave options empty.
+- Every question must have a unique id.
+- Return between 1 and 5 questions only.
+
+Return ONLY valid JSON.
 
 Schema:
 
@@ -49,18 +75,11 @@ Schema:
 }
 `;
 
-  const response =
-    await gemini.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
+  const result =
+    await generateStructuredOutput<ClarificationResponse>({
+      prompt,
+      schema: clarificationSchema,
     });
-    console.log(
-  "RAW CLARIFICATION RESPONSE:"
-);
 
-console.log(response.text);
-
-  return parseClarifications(
-    response.text ?? ""
-  );
+  return result.questions;
 }

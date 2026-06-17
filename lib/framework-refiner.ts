@@ -1,5 +1,5 @@
-import { gemini } from "./gemini";
-import { parseFramework } from "./framework-parser";
+import { generateStructuredOutput } from "./ai/structured-output";
+import { frameworkSchema } from "./ai/schemas/framework.schema";
 
 import { HiringFramework } from "@/types/framework";
 
@@ -44,8 +44,6 @@ Return ONLY valid JSON.
 
 Schema:
 
-Schema:
-
 {
   "roleSummary": "",
   "mustHave": [],
@@ -67,13 +65,8 @@ Schema:
 }
 `;
 
-  const response =
-    await gemini.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-
-  return parseFramework(
-    response.text ?? ""
-  );
+  return generateStructuredOutput<HiringFramework>({
+    prompt,
+    schema: frameworkSchema,
+  });
 }

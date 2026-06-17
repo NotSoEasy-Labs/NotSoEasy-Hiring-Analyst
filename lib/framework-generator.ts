@@ -1,5 +1,5 @@
-import { gemini } from "./gemini";
-import { parseFramework } from "./framework-parser";
+import { generateStructuredOutput } from "./ai/structured-output";
+import { frameworkSchema } from "./ai/schemas/framework.schema";
 import { HiringFramework } from "@/types/framework";
 
 function sleep(ms: number) {
@@ -138,31 +138,18 @@ Return JSON only.
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      console.log(
-        `Framework generation attempt ${attempt}/3`
-      );
+      console.log(`Framework generation attempt ${attempt}/3`);
 
-      const response =
-        await gemini.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: prompt,
+      const framework =
+        await generateStructuredOutput<HiringFramework>({
+          prompt,
+          schema: frameworkSchema,
         });
 
-      const text = response.text ?? "";
+      console.log("STRUCTURED FRAMEWORK:");
+      console.dir(framework, { depth: null });
 
-      console.log(
-        "RAW GEMINI RESPONSE:"
-      );
-
-console.log(text);
-
-      if (!text.trim()) {
-        throw new Error(
-          "Gemini returned an empty response."
-        );
-      }
-
-      return parseFramework(text);
+      return framework;
     } catch (error: any) {
       lastError = error;
 
@@ -182,12 +169,8 @@ console.log(text);
         status === 500;
 
       if (isRetryable && attempt < 3) {
-        console.log(
-          `Retrying in 2 seconds...`
-        );
-
+        console.log("Retrying in 2 seconds...");
         await sleep(2000);
-
         continue;
       }
 

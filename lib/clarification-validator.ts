@@ -10,39 +10,47 @@ const FALLBACK_QUESTIONS: ClarificationQuestion[] = [
   },
 ];
 
+const VALID_TYPES = new Set([
+  "priority",
+  "flexibility",
+  "weighting",
+  "dealbreaker",
+]);
+
 export function validateClarifications(
   data: unknown
 ): ClarificationQuestion[] {
-  try {
-    if (!data || typeof data !== "object") {
-      return FALLBACK_QUESTIONS;
-    }
-
-    const questions = (data as any).questions;
-
-    if (!Array.isArray(questions)) {
-      return FALLBACK_QUESTIONS;
-    }
-
-    const validQuestions = questions
-      .filter((question) => {
-        return (
-          question &&
-          typeof question.id === "string" &&
-          typeof question.question === "string" &&
-          typeof question.type === "string" &&
-          Array.isArray(question.options) &&
-          question.options.length > 0
-        );
-      })
-      .slice(0, 5);
-
-    if (validQuestions.length === 0) {
-      return FALLBACK_QUESTIONS;
-    }
-
-    return validQuestions;
-  } catch {
+  if (!data || typeof data !== "object") {
     return FALLBACK_QUESTIONS;
   }
+
+  const questions = (data as any).questions;
+
+  if (!Array.isArray(questions)) {
+    return FALLBACK_QUESTIONS;
+  }
+
+  const validQuestions = questions
+    .filter((question): question is ClarificationQuestion => {
+      return (
+        question &&
+        typeof question.id === "string" &&
+        question.id.trim().length > 0 &&
+        typeof question.question === "string" &&
+        question.question.trim().length > 0 &&
+        typeof question.type === "string" &&
+        VALID_TYPES.has(question.type) &&
+        Array.isArray(question.options) &&
+        question.options.length > 0 &&
+        question.options.every(
+          (option: unknown) =>
+            typeof option === "string" && option.trim().length > 0
+        )
+      );
+    })
+    .slice(0, 5);
+
+  return validQuestions.length > 0
+    ? validQuestions
+    : FALLBACK_QUESTIONS;
 }

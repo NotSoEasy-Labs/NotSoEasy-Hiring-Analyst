@@ -3,23 +3,28 @@ import {
   HiringFramework,
 } from "@/types/framework";
 
+const VALID_CATEGORIES = new Set([
+  "technical",
+  "experience",
+  "behavioral",
+  "leadership",
+  "domain",
+]);
+
 const EMPTY_FRAMEWORK: HiringFramework = {
   roleSummary: "",
-
   mustHave: [],
-
   preferred: [],
-
   dealBreakers: [],
-
   clarificationAreas: [],
-
   hiddenEvaluationFactors: [],
-
   evaluationRisks: [],
-
   evaluationCriteria: [],
 };
+
+function unique(values: string[]) {
+  return [...new Set(values.map((v) => v.trim()).filter(Boolean))];
+}
 
 export function validateFramework(
   data: unknown
@@ -28,165 +33,146 @@ export function validateFramework(
     return EMPTY_FRAMEWORK;
   }
 
-  const framework =
-    data as Record<string, unknown>;
+  const framework = data as Record<string, unknown>;
 
   const evaluationCriteria: EvaluationCriterion[] =
-    Array.isArray(
-      framework.evaluationCriteria
-    )
+    Array.isArray(framework.evaluationCriteria)
       ? framework.evaluationCriteria
           .filter(
             (
               item
-            ): item is Record<
-              string,
-              unknown
-            > =>
-              typeof item ===
-                "object" &&
+            ): item is Record<string, unknown> =>
+              typeof item === "object" &&
               item !== null
           )
           .map((item) => ({
             criterion:
-              typeof item.criterion ===
-              "string"
-                ? item.criterion
+              typeof item.criterion === "string"
+                ? item.criterion.trim()
                 : "",
 
             weight:
-              typeof item.weight ===
-              "number"
-                ? item.weight
+              typeof item.weight === "number"
+                ? Math.max(
+                    0,
+                    Math.min(100, item.weight)
+                  )
                 : 0,
 
             required:
-              typeof item.required ===
-              "boolean"
+              typeof item.required === "boolean"
                 ? item.required
                 : false,
 
             category:
-              typeof item.category ===
-              "string"
-                ? (item.category as any)
+              typeof item.category === "string" &&
+              VALID_CATEGORIES.has(item.category)
+                ? (item.category as EvaluationCriterion["category"])
                 : "domain",
 
             evidenceExpected:
               typeof item.evidenceExpected ===
               "string"
-                ? item.evidenceExpected
+                ? item.evidenceExpected.trim()
                 : "",
           }))
+          .filter(
+            (criterion) =>
+              criterion.criterion &&
+              criterion.evidenceExpected &&
+              criterion.weight > 0
+          )
       : [];
 
-  const result: HiringFramework =
-    {
-      roleSummary:
-        typeof framework.roleSummary ===
-        "string"
-          ? framework.roleSummary
-          : "",
+  const result: HiringFramework = {
+    roleSummary:
+      typeof framework.roleSummary === "string"
+        ? framework.roleSummary.trim()
+        : "",
 
-      mustHave: Array.isArray(
-        framework.mustHave
-      )
+    mustHave: unique(
+      Array.isArray(framework.mustHave)
         ? framework.mustHave.filter(
-            (
-              item
-            ): item is string =>
-              typeof item ===
-              "string"
+            (item): item is string =>
+              typeof item === "string"
           )
-        : [],
+        : []
+    ),
 
-      preferred: Array.isArray(
-        framework.preferred
-      )
+    preferred: unique(
+      Array.isArray(framework.preferred)
         ? framework.preferred.filter(
-            (
-              item
-            ): item is string =>
-              typeof item ===
-              "string"
+            (item): item is string =>
+              typeof item === "string"
           )
-        : [],
+        : []
+    ),
 
-      dealBreakers: Array.isArray(
-        framework.dealBreakers
-      )
+    dealBreakers: unique(
+      Array.isArray(framework.dealBreakers)
         ? framework.dealBreakers.filter(
-            (
-              item
-            ): item is string =>
-              typeof item ===
-              "string"
+            (item): item is string =>
+              typeof item === "string"
           )
-        : [],
+        : []
+    ),
 
-      clarificationAreas:
-        Array.isArray(
-          framework.clarificationAreas
-        )
-          ? framework.clarificationAreas.filter(
-              (
-                item
-              ): item is string =>
-                typeof item ===
-                "string"
-            )
-          : [],
+    clarificationAreas: unique(
+      Array.isArray(
+        framework.clarificationAreas
+      )
+        ? framework.clarificationAreas.filter(
+            (item): item is string =>
+              typeof item === "string"
+          )
+        : []
+    ),
 
-      hiddenEvaluationFactors:
-        Array.isArray(
-          framework.hiddenEvaluationFactors
-        )
-          ? framework.hiddenEvaluationFactors.filter(
-              (
-                item
-              ): item is string =>
-                typeof item ===
-                "string"
-            )
-          : [],
+    hiddenEvaluationFactors: unique(
+      Array.isArray(
+        framework.hiddenEvaluationFactors
+      )
+        ? framework.hiddenEvaluationFactors.filter(
+            (item): item is string =>
+              typeof item === "string"
+          )
+        : []
+    ),
 
-      evaluationRisks:
-        Array.isArray(
-          framework.evaluationRisks
-        )
-          ? framework.evaluationRisks.filter(
-              (
-                item
-              ): item is string =>
-                typeof item ===
-                "string"
-            )
-          : [],
+    evaluationRisks: unique(
+      Array.isArray(
+        framework.evaluationRisks
+      )
+        ? framework.evaluationRisks.filter(
+            (item): item is string =>
+              typeof item === "string"
+          )
+        : []
+    ),
 
-      evaluationCriteria,
-    };
+    evaluationCriteria,
+  };
 
   if (
-    result.clarificationAreas
-      .length === 0
+    result.clarificationAreas.length === 0
   ) {
-    result.clarificationAreas =
-      [
-        "No major ambiguities detected. Confirm requirement prioritization before evaluation.",
-      ];
+    result.clarificationAreas = [
+      "No major ambiguities detected. Confirm requirement prioritization before evaluation.",
+    ];
   }
 
-console.log(
-  "VALIDATED FRAMEWORK:"
-);
+  const totalWeight =
+    result.evaluationCriteria.reduce(
+      (sum, criterion) =>
+        sum + criterion.weight,
+      0
+    );
 
-console.log(
-  JSON.stringify(
-    result,
-    null,
-    2
-  )
-);
+  if (totalWeight !== 100) {
+    console.warn(
+      `⚠️ Evaluation weights total ${totalWeight} instead of 100.`
+    );
+  }
 
-return result;
+  return result;
 }
