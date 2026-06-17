@@ -71,9 +71,9 @@ export async function PATCH(
       await Campaign.findByIdAndUpdate(
         id,
         body,
-        {
-          new: true,
-        }
+{
+  returnDocument: "after",
+}
       );
 
     if (!campaign) {
