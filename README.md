@@ -1,36 +1,315 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NotSoEasy Hiring Analyst
 
-## Getting Started
+> **Hiring isn't easy. Choosing candidates shouldn't be.**
 
-First, run the development server:
+An AI-powered Hiring Intelligence SaaS that transforms recruiter intent into structured evaluation frameworks and helps recruiters identify the best candidates through explainable AI-driven assessments.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Overview
+
+Recruiters spend countless hours manually reviewing resumes while relying on inconsistent hiring criteria and keyword-based Applicant Tracking Systems (ATS).
+
+**NotSoEasy Hiring Analyst** solves this by understanding *how a recruiter actually wants to hire*, generating a dynamic evaluation rubric, and using that rubric to evaluate every candidate consistently and transparently.
+
+Instead of asking:
+
+> *"Does this resume match the JD?"*
+
+NotSoEasy asks:
+
+> *"What does success look like for this role?"*
+
+Every candidate is then evaluated against that same recruiter-approved framework.
+
+---
+
+# Features
+
+## Recruiter Workspace
+
+- Google Authentication (Auth.js)
+- Recruiter Dashboard
+- Campaign Management
+- Campaign Search
+- Rename/Delete Campaigns
+- Secure Campaign Ownership
+
+---
+
+## AI Hiring Intelligence
+
+Generate hiring frameworks directly from:
+
+- Job Description
+- Recruiter Notes
+
+The system automatically produces:
+
+- Role Summary
+- Must-Have Criteria
+- Preferred Criteria
+- Deal Breakers
+- Clarification Areas
+- Hidden Evaluation Factors
+- Evaluation Risks
+- Dynamic Evaluation Rubric
+
+---
+
+## Clarification Engine
+
+Instead of blindly trusting the JD, the platform asks intelligent clarification questions such as:
+
+- Which skills are negotiable?
+- What matters more?
+- Which requirements are true deal breakers?
+- What should be weighted higher?
+
+Recruiter responses are used to refine the hiring framework before any candidate is evaluated.
+
+---
+
+## Explainable Evaluation Rubric
+
+Unlike traditional ATS platforms that rely on keyword matching, NotSoEasy generates a structured evaluation rubric containing:
+
+- Weighted Criteria
+- Required Flags
+- Categories
+- Expected Evidence
+
+Every future candidate is evaluated against the exact same rubric.
+
+---
+
+## Resume Management
+
+- Multi-file Upload
+- PDF Support
+- DOCX Support
+- Duplicate Detection (SHA-256)
+- Private Resume Storage
+- Resume Lifecycle Tracking
+
+---
+
+## Secure SaaS Architecture
+
+- Multi-tenant architecture
+- Google OAuth
+- Role-based Authorization
+- Campaign Ownership
+- Protected Routes
+- Private Resume Storage
+- Storage Service Abstraction
+
+---
+
+# Current Development Status
+
+## Completed
+
+- Application Foundation
+- Recruiter Authentication
+- Recruiter Workspace
+- Campaign Management
+- Hiring Framework Generation
+- Clarification Engine
+- Evaluation Rubric Generation
+- Resume Upload Backend
+- Storage Architecture
+- Structured AI Outputs
+
+## In Progress
+
+- Resume Workspace
+- Resume Parsing Engine
+
+## Planned
+
+- Candidate Intelligence Engine
+- Candidate Evaluation Engine
+- Ranking System
+- Candidate Comparison
+- Recruiter Analytics
+
+---
+
+# Product Workflow
+
+```text
+Recruiter Login
+        │
+        ▼
+Create Campaign
+        │
+        ▼
+Paste Job Description
+        │
+        ▼
+Generate Hiring Framework
+        │
+        ▼
+Answer Clarification Questions
+        │
+        ▼
+Generate Evaluation Rubric
+        │
+        ▼
+Upload Candidate Resumes
+        │
+        ▼
+Candidate Intelligence (Upcoming)
+        │
+        ▼
+AI Evaluation (Upcoming)
+        │
+        ▼
+Ranking & Explainability (Upcoming)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+User
+│
+└── Campaign
+      │
+      ├── Hiring Framework
+      ├── Clarifications
+      ├── Evaluation Rubric
+      ├── Resume
+      ├── Candidate Profile (Upcoming)
+      ├── Evaluation (Upcoming)
+      └── Rankings (Upcoming)
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+# Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Frontend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js 15
+- TypeScript
+- React
+- Tailwind CSS
+- Shadcn UI
 
-## Deploy on Vercel
+## Backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next.js Server Actions
+- MongoDB
+- Mongoose
+- Auth.js v5
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## AI
+
+- Google Gemini 2.5 Flash
+- Structured Outputs
+- Schema Validation
+
+## Authentication
+
+- Google OAuth
+- JWT Sessions
+- Role-based Authorization
+
+## Storage
+
+- Local Storage Provider
+- Storage Service Abstraction
+- Cloud-ready (S3 / Vercel Blob / Cloudinary)
+
+---
+
+# AI Pipeline
+
+Unlike traditional LLM applications that parse markdown responses using regular expressions, NotSoEasy uses Gemini Structured Outputs.
+
+```text
+Prompt
+      │
+      ▼
+Gemini Structured Output
+      │
+      ▼
+Schema Validation
+      │
+      ▼
+MongoDB
+```
+
+This eliminates:
+
+- Regex parsing
+- Markdown stripping
+- Manual JSON extraction
+- Brittle response handling
+
+---
+
+# Security
+
+- Google OAuth Authentication
+- Protected Routes
+- Campaign Ownership Validation
+- Server-side Authorization
+- Private Resume Storage
+- Duplicate File Detection
+- Secure Server Actions
+
+---
+
+# Future Roadmap
+
+### Candidate Intelligence
+
+Generate structured candidate profiles from resumes.
+
+---
+
+### Evaluation Engine
+
+Evaluate candidates using recruiter-approved weighted rubrics.
+
+---
+
+### Ranking Engine
+
+Automatically rank candidates based on explainable AI scoring.
+
+---
+
+### Candidate Comparison
+
+Compare finalists with transparent reasoning and trade-off analysis.
+
+---
+
+### Recruiter Analytics
+
+Hiring insights, reports, and candidate trends.
+
+---
+
+# Vision
+
+NotSoEasy is not another Applicant Tracking System.
+
+It is an **AI Hiring Intelligence Platform** designed to help recruiters answer one question:
+
+> **Which candidates should I interview, and why?**
+
+---
+
+# Author
+
+**Manvesh Thakur**
+
+Building AI-powered developer tools and intelligent SaaS products.
+
+---
