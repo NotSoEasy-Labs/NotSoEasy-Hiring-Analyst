@@ -37,7 +37,10 @@ Rules:
 - Update evaluationCriteria using recruiter answers.
 - Increase weights for heavily prioritized criteria.
 - Decrease weights for de-prioritized criteria.
-- Total weights should remain close to 100.
+- The sum of all evaluationCriteria.weight values MUST equal exactly 100.
+- Verify the total before returning the JSON.
+- Do not invent new categories.
+- Do not change a preferred criterion into a required criterion unless the recruiter explicitly indicates it.
 - Preserve required=true for truly mandatory criteria.
 
 Return ONLY valid JSON.

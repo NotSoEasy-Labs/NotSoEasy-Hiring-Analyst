@@ -8,24 +8,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  Download,
-  MoreVertical,
-  RefreshCcw,
-  Trash2,
-  Sparkles,
-} from "lucide-react";
+import { MoreVertical } from "lucide-react";
 
 import { DownloadResumeButton } from "./download-resume-button";
 import { ReplaceResumeButton } from "./replace-resume-button";
 import { DeleteResumeButton } from "./delete-resume-button";
+import { ParseResumeButton } from "./parse-resume-button";
 
 type Props = {
   resumeId: string;
+  status: string;
 };
 
 export function ResumeActionsMenu({
   resumeId,
+  status,
 }: Props) {
   return (
     <DropdownMenu>
@@ -65,15 +62,13 @@ export function ResumeActionsMenu({
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          disabled
-          className="cursor-not-allowed"
-        >
-          <Sparkles className="mr-2 h-4 w-4" />
-          Parse Resume
-          <span className="ml-auto text-xs text-zinc-500">
-            Soon
-          </span>
+        <DropdownMenuItem asChild>
+          <div>
+            <ParseResumeButton
+              resumeId={resumeId}
+              status={status}
+            />
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

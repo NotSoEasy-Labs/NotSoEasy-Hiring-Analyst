@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 
 import { deleteResume } from "@/app/actions/resume/delete-resume";
+import { ParseResumeButton } from "./parse-resume-button";
 
 type Props = {
   resumeId: string;

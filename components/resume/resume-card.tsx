@@ -61,9 +61,10 @@ export function ResumeCard({
           </div>
         </div>
 
-        <ResumeActionsMenu
-          resumeId={resume._id}
-        />
+<ResumeActionsMenu
+  resumeId={resume._id}
+  status={resume.status}
+/>
       </div>
 
       <div className="mt-6 flex items-center justify-between border-t border-zinc-800 pt-4 text-sm text-zinc-400">

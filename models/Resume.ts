@@ -62,6 +62,50 @@ const ResumeSchema =
         default: null,
         index: true,
       },
+      rawText: {
+  type: String,
+  default: null,
+},
+
+parsedAt: {
+  type: Date,
+  default: null,
+},
+
+parseError: {
+  type: String,
+  default: null,
+},
+
+textLength: {
+  type: Number,
+  default: 0,
+},
+
+wordCount: {
+  type: Number,
+  default: 0,
+},
+
+estimatedPages: {
+  type: Number,
+  default: 0,
+},
+
+isImageOnly: {
+  type: Boolean,
+  default: false,
+},
+
+isLowQuality: {
+  type: Boolean,
+  default: false,
+},
+
+parserVersion: {
+  type: String,
+  default: "1.0.0",
+},
     },
     {
       timestamps: true,
